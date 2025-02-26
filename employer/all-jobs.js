@@ -1,8 +1,10 @@
-fetch('http://127.0.0.1:7000/jobs/jobs/')
-    .then(response => response.json())
-    .then(data => {
-        const jobsContainer = document.getElementById('all-jobs-container');
-        jobsContainer.innerHTML = data.map(job => `
+fetch("https://job-protal-api.onrender.com/jobs/jobs/")
+  .then((response) => response.json())
+  .then((data) => {
+    const jobsContainer = document.getElementById("all-jobs-container");
+    jobsContainer.innerHTML = data
+      .map(
+        (job) => `
 <div class="max-w-lg lg:max-w-4xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 rounded-lg shadow-md border-2 border-transparent hover:border-indigo-600 transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl relative">
         <!-- Star Icon -->
@@ -44,6 +46,8 @@ fetch('http://127.0.0.1:7000/jobs/jobs/')
 </div>
 
 
-    `).join('');
-    })
-    .catch(error => console.error('Error fetching jobs:', error));
+    `
+      )
+      .join("");
+  })
+  .catch((error) => console.error("Error fetching jobs:", error));
