@@ -11,7 +11,7 @@ const dashboard = () => {
     return;
   }
 
-  fetch("https://job-protal-api.onrender.com//job_seekers/dashboard/", {
+  fetch("https://job-protal-api.onrender.com/job_seekers/dashboard/", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const deleteApplication = (applicationId) => {
 
   if (confirm("Are you sure you want to delete this application?")) {
     fetch(
-      `https://job-protal-api.onrender.com//applications/${applicationId}/delete/`,
+      `https://job-protal-api.onrender.com/applications/${applicationId}/delete/`,
       {
         method: "DELETE",
         headers: {

@@ -27,7 +27,10 @@
         const fetchApplicationDetails = (applicationId) => {
             const token = localStorage.getItem("authToken");
 
-            fetch(`https://job-protal-api.onrender.com/applications/${applicationId}/`, {
+            // Make sure the URL is constructed properly by checking the applicationId value
+            const url = `https://job-protal-api.onrender.com/applications/${applicationId}/`;
+
+            fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,11 +40,12 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data) {
-                        renderEditForm(data);
+                        renderEditForm(data);  // Assuming this function handles rendering the data into a form
                     }
                 })
                 .catch(error => console.error('Error fetching details:', error));
         };
+
 
         const renderEditForm = (application) => {
             const editDiv = document.getElementById('editApplication');

@@ -93,7 +93,7 @@ const displayJobs = (jobs) => {
 };
 
 // Fetch jobs from your API or data source
-fetch("http://127.0.0.1:7000/jobs/jobs/")
+fetch("https://job-protal-api.onrender.com/jobs/jobs/")
   .then((response) => response.json())
   .then((data) => {
     // Limit to 5 jobs

@@ -90,7 +90,7 @@
     <script src="create-job.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Retrieve the username from localStorage or wherever it's stored
+            // Retrieve the auth token from localStorage
             const authToken = localStorage.getItem("authToken");
             const usernameDisplay = document.getElementById("username-display");
             const mobileUsername = document.getElementById("mobile-username");
@@ -101,20 +101,44 @@
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Token ${authToken}`
+                        "Authorization": `Token ${authToken}`  // Send the token in the request header
                     }
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.user) {
-                            usernameDisplay.textContent = data.user; // Display the username on desktop
-                            mobileUsername.textContent = data.user; // Display username in mobile menu
+                    .then(response => {
+                        if (response.ok) {
+                            // Successfully authenticated
+                            return response.json();  // Parse JSON if successful
+                        } else if (response.status === 401) {
+                            // Unauthorized, token might be expired
+                            alert('Session expired. Please log in again.');
+                            window.location.href = "signin-emp.html";  // Redirect to login page
+                            return Promise.reject("Unauthorized");
+                        } else {
+                            // Handle other response errors
+                            return Promise.reject("Failed to fetch profile data");
                         }
                     })
-                    .catch(error => console.error('Error fetching profile data:', error));
+                    .then(data => {
+                        if (data.user) {
+                            // Display the username if available
+                            usernameDisplay.textContent = data.user;  // Desktop display
+                            mobileUsername.textContent = data.user;   // Mobile display
+                        } else {
+                            // Handle case where user data is missing
+                            usernameDisplay.textContent = "Guest";
+                            mobileUsername.textContent = "Guest";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching profile data:', error);
+                        // Handle any error that occurs during the fetch
+                        usernameDisplay.textContent = "Guest";  // Fallback to guest
+                        mobileUsername.textContent = "Guest";  // Fallback to guest
+                    });
             } else {
-                usernameDisplay.textContent = "Guest"; // Display "Guest" on desktop
-                mobileUsername.textContent = "Guest"; // Display "Guest" in mobile menu
+                // No token available, treat as guest
+                usernameDisplay.textContent = "Guest";  // Desktop display
+                mobileUsername.textContent = "Guest";   // Mobile display
             }
 
             // Desktop Dropdown Menu Toggle
@@ -138,7 +162,7 @@
                 event.preventDefault();
                 // Clear the authentication token and redirect to login page
                 localStorage.removeItem("authToken");
-                window.location.href = "signin-emp.html"; // Redirect to your login page
+                window.location.href = "signin-emp.html";  // Redirect to login page
             });
 
             // Mobile Menu Toggle
@@ -155,9 +179,10 @@
                 event.preventDefault();
                 // Clear the authentication token and redirect to login page
                 localStorage.removeItem("authToken");
-                window.location.href = "signin-emp.html"; // Redirect to your login page
+                window.location.href = "signin-emp.html";  // Redirect to login page
             });
         });
+
 
 
     </script>
